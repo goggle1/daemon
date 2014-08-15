@@ -194,12 +194,13 @@ int main(int argc, char* argv[])
 					if (WIFEXITED(status) && pid > 0 && status != 0) // child exited with status -2 restart or -1 don't restart 
 					{
 						//qtss_printf("child exited with status=%d\n", exitStatus);
-						
+						#if 0
 						if ( exitStatus == -1) // child couldn't run don't try again
 						{
 							fprintf(stderr, "child exited with -1 fatal error so parent is exiting too.\n");
 							exit (EXIT_FAILURE); 
 						}
+						#endif
 						break; // restart the child
 							
 					}
@@ -255,11 +256,11 @@ int main(int argc, char* argv[])
 	char* child_program = argv[1];
 	char* child_argv[argc-1];
 	int index = 0;
-	for(index=0; index < argc-2; index++)
+	for(index=0; index < argc-1; index++)
 	{
-		child_argv[index] = argv[index+2];
+		child_argv[index] = argv[index+1];
 	}
-	child_argv[argc-2] = NULL;
+	child_argv[argc-1] = NULL;
 	int ret = execv(child_program, child_argv);	
 	
 	return ret;
