@@ -140,8 +140,6 @@ int daemon(int nochdir, int noclose)
 
 int main(int argc, char* argv[])
 {
-	int ret = 0;
-
 	struct sigaction act;
 	sigemptyset(&act.sa_mask);
     act.sa_flags = 0;
@@ -254,11 +252,15 @@ int main(int argc, char* argv[])
     (void)::sigaction(SIGTERM, &act, NULL);
     (void)::sigaction(SIGQUIT, &act, NULL);
 
-	while(1)
+	char* child_program = argv[1];
+	char* child_argv[argc-1];
+	int index = 0;
+	for(index=0; index < argc-2; index++)
 	{
-		sleep(1);
+		child_argv[index] = argv[index+2];
 	}
-	
+	child_argv[argc-2] = NULL;
+	int ret = execv(child_program, child_argv);	
 	
 	return ret;
 }
